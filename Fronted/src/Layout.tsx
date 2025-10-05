@@ -1,25 +1,43 @@
 import { useState } from "react";
+import axios from "axios";
 
 const Layout = () => {
-  const [phoneNUmber, setPhoneNumber] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("test@example.com");
+  const [error, setError] = useState("");
+  const [amount, setAmount] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const submit = (e: any) => {
+  const submit = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
 
-    if (phoneNUmber.length < 10) {
-      setError("PLease enter a valid number");
+    if (phoneNumber.length < 10) {
+      setError("Please enter a valid number");
       setLoading(false);
       return;
     }
-    if (amount < "5" || amount >= "50000") {
+    if (+amount < 5 || +amount >= 50000) {
       setError("Please enter a realistic amount");
       setLoading(false);
       return;
-    } else setError("");
-    setLoading(true);
+    } else {
+      try {
+        const response = await axios.post(
+          "http://localhost:3001/api/initialize-payment",
+          {
+            email,
+            amount: +amount,
+          }
+        );
+        console.log("Payment response:", response.data);
+        setError("");
+      } catch (err: any) {
+        setError(err.response?.data?.error || "Payment API error");
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   return (
@@ -31,14 +49,13 @@ const Layout = () => {
         <h2 className="text-2xl font-semibold text-center text-gray-800">
           Buy <span className="text-amber-700">Arnold Coffee</span>
         </h2>
-
         <div className="flex flex-col">
           <label htmlFor="phone" className="text-black font-semibold ">
             Your Number:
           </label>
           <input
             onChange={(e) => setPhoneNumber(e.target.value)}
-            value={phoneNUmber}
+            value={phoneNumber}
             id="phone"
             type="tel"
             required
