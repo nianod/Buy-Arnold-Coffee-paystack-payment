@@ -1,30 +1,35 @@
-require('dotenv').config()
-const express = require('express')
-const crypto = require('crypto')
-const Paystack = require('@paystack/inline-js')
+require('dotenv').config();
+const express = require('express');
+const axios = require('axios');
 
-const app = express()
-const paystack = new Paystack(process.env.PAYSTACK_SECRET_KEY)
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.post('/api/initialize-payment', async (req, res) => {
+  const { amount, email } = req.body;
 
-app.post('/api/initialize-payment', async(request, response) => {
-    const {amount, email} = request.body
+  try {
+    const response = await axios.post('https://api.paystack.co/transaction/initialize', {
+        email,
+        amount: amount * 100,  
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
-    try {
-        const currentTransaction = await paystack.transaction.initialize({
-            email,
-            amount: amount * 100
-        })
+    res.status(200).json(response.data);
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    res
+      .status(500)
+      .json({ error: error.response?.data || 'Unexpected error occurred brother' });
+  }
+});
 
-        response.status(200).json(currentTransaction)
-    } catch(error) {
-        console.error(error.message || "Unexpected error occurred brother")
-        response.status(500).json({ error: error.message || "Another unexpected error just occurred"})
-    }
-})
-
-const PORT = process.env.PORT
-app.listen(PORT, () => console.log(`App running on port ${PORT}` || 7000)
-)
+const PORT = process.env.PORT || 7000;
+app.listen(PORT, () => console.log(`App running on port ${PORT}`));
