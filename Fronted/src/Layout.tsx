@@ -31,6 +31,7 @@ const Layout = () => {
           }
         );
         console.log("Payment response:", response.data);
+        window.open(response.data.authorization_url, "_blank")
         setError("");
       } catch (err: any) {
         setError(err.response?.data?.error || "Payment API error");
@@ -38,6 +39,7 @@ const Layout = () => {
         setLoading(false);
       }
     }
+   
   };
 
   return (
