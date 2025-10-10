@@ -83,12 +83,6 @@ Issues and PRs are welcome! Want to suggest an improvement, spot a bug, or showc
 
 ---
 
-## 📄 License
-
-[MIT](LICENSE)
-
----
-
 > **Built for devs, by devs. Enjoy a digital coffee break!**
 
 
