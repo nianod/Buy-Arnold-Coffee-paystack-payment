@@ -19,10 +19,11 @@ A full-stack payment demo: buy your next cup with seamless integration between *
 **1. Clone and install**
 
 ```js
-git clone
-cd
+git clone https://github.com/nianod/Buy-Arnold-Coffee-paystack-payment.git
+cd Buy-Arnold-Coffee-paystack-payment
 cd Backend
 npm install
+
 ```
 
 
@@ -42,6 +43,7 @@ PORT=8000
 
   ```js
   npm start
+
   ```
 
   
@@ -51,6 +53,7 @@ PORT=8000
   cd fronted
   npm install
   npm start
+  
   ```
 
 
