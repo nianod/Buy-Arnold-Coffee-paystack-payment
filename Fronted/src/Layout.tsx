@@ -24,7 +24,7 @@ const Layout = () => {
     } else {
       try {
         const response = await axios.post(
-          "http://localhost:3001/api/initialize-payment",
+          "http://localhost:8000/api/initialize-payment",  
           {
             email,
             amount: +amount,
